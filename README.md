@@ -40,5 +40,5 @@ mkdir build
 cd build
 cmake ../.
 make
-sudo make install
 ```
+You can do `sudo make install` but it is not required
