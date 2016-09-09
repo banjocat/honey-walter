@@ -25,8 +25,8 @@
 
 
 
-# To build libssh
-Requires cmake and a C compiler
+# To build libssh https://www.libssh.org/
+Requires openssl, cmake and a C compiler
 ```
 git submodule init
 git submodule update
