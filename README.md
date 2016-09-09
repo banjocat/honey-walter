@@ -1,4 +1,4 @@
-#### In major development
+#### In development
 
 # C practice SSH honey pot project
 
