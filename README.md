@@ -25,7 +25,7 @@
 
 
 
-# To build
+# To build libssh
 Requires cmake and a C compiler
 ```
 git submodule init
