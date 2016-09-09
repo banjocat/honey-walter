@@ -23,3 +23,17 @@
     * ls (better version than above)
 * Configuration file to vary honey pot
 
+
+
+# To build
+Requires cmake and a C compiler
+```
+git submodule init
+git submodule update
+cd libssh
+mkdir build
+cd build
+cmake ../.
+make
+sudo make install
+```
