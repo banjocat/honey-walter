@@ -2,7 +2,9 @@
 
 # C practice SSH honey pot project
 
-## Requirements
+Like all my practice projects I setup goals that I try to reach.
+
+## Goals
 * cmake to build
 * docker to run app
 * create a SSH server
@@ -17,7 +19,7 @@
 * "user" and "password" should be configurable
 
 
-## Bonus points
+## Bonus goals
 * Fake directory structure to then allow below commands
     * cd
     * ls (better version than above)
