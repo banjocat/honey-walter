@@ -1,0 +1,6 @@
+version: '2'
+services:
+    honeywalter:
+        container_name: honey_walter
+        build: .
+

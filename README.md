@@ -6,7 +6,7 @@ Like all my practice projects I setup goals that I try to reach.
 
 ## Goals
 * ~~cmake to build~~
-* docker to run app
+* ~~docker to run app~~
 * create a SSH server
 * logs all actions of user
 * should allow the following commands
@@ -26,27 +26,19 @@ Like all my practice projects I setup goals that I try to reach.
 * Configuration file to vary honey pot
 
 
-
-# To build libssh
-https://www.libssh.org/
-
-Requires openssl, cmake and a C compiler
-
-```
-git submodule init
-git submodule update
-cd libssh
-mkdir build
-cd build
-cmake ../.
-make
-```
-You can do `sudo make install` but it is not required
-
 # To build honeywalter
+Requires openssl, cmake, libssh-dev and a C compiler
 ```
 cmake .
 make
 ```
 
 `honeywalter` will be located in `./bin`
+
+
+# Dockerfile
+While there is a dockerfile it is intended more for deployment than development.
+Developing with C in a Dockerfile is not ideal as it will always rebuild from scratch.
+Perhaps there is a way around this.. if so please tell me :D
+
+To run using docker use the expected `docker-compose up`
