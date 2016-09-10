@@ -42,3 +42,11 @@ cmake ../.
 make
 ```
 You can do `sudo make install` but it is not required
+
+# To build honeywalter
+```
+cmake .
+make
+```
+
+`honeywalter` will be located in `./bin`
