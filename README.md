@@ -5,7 +5,7 @@
 Like all my practice projects I setup goals that I try to reach.
 
 ## Goals
-* cmake to build
+* ~~cmake to build~~
 * docker to run app
 * create a SSH server
 * logs all actions of user
