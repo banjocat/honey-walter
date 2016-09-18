@@ -1,13 +1,13 @@
 #### In development
 
-# C practice SSH honey pot project
+# Python twisted practice project
 
 Like all my practice projects I setup goals that I try to reach.
 
 ## Goals
-* ~~cmake to build~~
-* ~~docker to run app~~
+* Use python twisted
 * create a SSH server
+* Create a Dockerfile and compose
 * logs all actions of user
 * should allow the following commands
     * cat
@@ -26,19 +26,4 @@ Like all my practice projects I setup goals that I try to reach.
 * Configuration file to vary honey pot
 
 
-# To build honeywalter
-Requires openssl, cmake, libssh-dev and a C compiler
-```
-cmake .
-make
-```
 
-`honeywalter` will be located in `./bin`
-
-
-# Dockerfile
-While there is a dockerfile it is intended more for deployment than development.
-Developing with C in a Dockerfile is not ideal as it will always rebuild from scratch.
-Perhaps there is a way around this.. if so please tell me :D
-
-To run using docker use the expected `docker-compose up`
