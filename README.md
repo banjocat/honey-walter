@@ -8,7 +8,7 @@ Like all my practice projects I setup goals that I try to reach.
 * ~~Use python twisted~~
 * ~~create a SSH server~~
 * password auth
-* Create a Dockerfile and compose
+* ~~Create a Dockerfile and compose~~
 * logs all actions of user
 * should allow the following commands
     * cat

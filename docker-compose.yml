@@ -1,0 +1,9 @@
+version: '2'
+services:
+    honey:
+        image: banjocat/walter_honey:latest
+        build: .
+        volumes:
+            - ./honey/.:/app
+        ports:
+            - "2000:2000"
