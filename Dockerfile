@@ -15,7 +15,7 @@ RUN pip install twisted
 # Directory format
 RUN mkdir -p /app
 WORKDIR /app
-COPY ./honey/ /app.
+COPY ./honey/ /app
 
 EXPOSE 2000
 CMD python server.py
