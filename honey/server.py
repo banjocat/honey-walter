@@ -6,7 +6,7 @@ from twisted.conch.ssh import keys, session
 from twisted.cred import portal, checkers
 from twisted.internet import reactor
 from twisted.conch.ssh.factory import SSHFactory
-from zope.interface import implements
+from zope.interface import implementer
 from twisted.python import log
 
 
@@ -20,39 +20,62 @@ with open('./demo.pub') as pipe:
     public_blob = pipe.read()
     public_key = keys.Key.fromString(data=public_blob)
 
-class HoneyRealm(object):
-    implements(portal.IRealm)
-    def requestAvatar(self, avatarId, mind, *interfaces):
-        print avatarId, mind
-        pass
+
 
 class HoneyProtocol(recvline.HistoricRecvLine):
     def __init__(self, user):
         self.user = user
 
     def connectionMade(self):
+        log.msg('connection made')
         self.showPrompt()
 
     def showPrompt(self):
-        self.terminal.write("$ ")
+        self.terminal.write('$ ')
 
 
+
+@implementer(IConchUser)
 class HoneyAvatar(avatar.ConchUser):
-    implements(IConchUser)
+    '''
+    An avatar represents one user logged in
+    '''
 
     def __init__(self, username):
-        log.msg(username)
+        log.msg('username:', username)
         avatar.ConchUser.__init__(self)
         self.username = username
+        self.channelLookup.update({'session': session.SSHSession})
 
+    def openShell(transport):
+        log.msg('Opening shell')
+        protocol = HoneyProtocol()
+        protocol.makeConnection(transport)
+        transport.makeConnection(session.wrapProtocol(protocol))
+        log.msg('Shell created')
+
+    def getPty(self, **args):
+        return None
+
+    def eofReceived(self):
+        pass
+
+    def closed(self):
+        pass
+
+
+@implementer(portal.IRealm)
 class HoneyRealm(object):
-    implements(portal.IRealm)
+    '''
+    A realm is a factory that returns avatars after authentication is made
+    '''
 
     def requestAvatar(self, avatarId, mind, *interfaces):
         if IConchUser in interfaces:
+            log.msg('Interface IConchUser found')
             return interfaces[0], HoneyAvatar(avatarId), lambda: None
         else:
-            raise NotImplementedError("No supported interfaces found")
+            raise NotImplementedError('No supported interfaces found')
 
 
 factory = SSHFactory()
