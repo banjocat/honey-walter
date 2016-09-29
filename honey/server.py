@@ -1,10 +1,11 @@
 import sys
 
 from twisted.conch import recvline, avatar
-from twisted.conch.interfaces import IConchUser
+from twisted.conch.interfaces import IConchUser, ISession
 from twisted.conch.ssh import keys, session
 from twisted.cred import portal, checkers
 from twisted.internet import reactor
+from twisted.protocols import basic
 from twisted.conch.ssh.factory import SSHFactory
 from zope.interface import implementer
 from twisted.python import log
@@ -22,39 +23,38 @@ with open('./demo.pub') as pipe:
 
 
 
-class HoneyProtocol(recvline.HistoricRecvLine):
-    def __init__(self, user):
-        self.user = user
-
-    def connectionMade(self):
-        log.msg('connection made')
-        self.showPrompt()
-
-    def showPrompt(self):
-        self.terminal.write('$ ')
+class HoneyProtocol(basic.LineOnlyReceiver):
 
 
+    def dataReceived(self, data):
+        log.msg('Got data:', data)
+        if data == '\x03':
+            self.transport.loseConnection()
+            return
+        elif data == '\r':
+            data = '\r\n'
 
-@implementer(IConchUser)
+        self.transport.write(data)
+
+
+
+@implementer(ISession)
 class HoneyAvatar(avatar.ConchUser):
     '''
     An avatar represents one user logged in
     '''
 
     def __init__(self, username):
-        log.msg('username:', username)
         avatar.ConchUser.__init__(self)
         self.username = username
         self.channelLookup.update({'session': session.SSHSession})
 
-    def openShell(transport):
-        log.msg('Opening shell')
+    def openShell(self, transport):
         protocol = HoneyProtocol()
         protocol.makeConnection(transport)
         transport.makeConnection(session.wrapProtocol(protocol))
-        log.msg('Shell created')
 
-    def getPty(self, **args):
+    def getPty(self, terminal, windowSize, attrs):
         return None
 
     def eofReceived(self):
