@@ -1,0 +1,13 @@
+
+
+
+motd: |
+    Welcome to the server
+
+username: root
+password: password
+port: 2000
+
+simple_commands:
+    - whoami: root
+

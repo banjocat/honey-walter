@@ -11,6 +11,7 @@ RUN apt-get install -y g++
 RUN pip install pycrypto
 RUN pip install cryptography
 RUN pip install twisted
+RUN pip install PyYaml
 
 # Directory format
 RUN mkdir -p /app

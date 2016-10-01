@@ -1,11 +1,12 @@
 import sys
 
+import yaml
 from twisted.conch import recvline, avatar
 from twisted.conch.interfaces import IConchUser, ISession
 from twisted.conch.ssh import keys, session
-from twisted.cred import portal, checkers
+from twisted.cred import checkers
+from twisted.cred.portal import Portal, IRealm
 from twisted.internet import reactor
-from twisted.protocols import basic
 from twisted.conch.ssh.factory import SSHFactory
 from zope.interface import implementer
 from twisted.python import log
@@ -13,29 +14,37 @@ from twisted.python import log
 
 log.startLogging(sys.stdout)
 
-with open('./demo.pem') as pipe:
-    private_blob = pipe.read()
-    private_key = keys.Key.fromString(data=private_blob)
 
-with open('./demo.pub') as pipe:
-    public_blob = pipe.read()
-    public_key = keys.Key.fromString(data=public_blob)
+class HoneyProtocol(recvline.HistoricRecvLine):
+    '''
+    This is the bulk of the logic that handles all connections
+    '''
+    def __init__(self):
+        log.msg('Protocol created')
 
+    def newLine(self):
+        self.terminal.write('\n\r$ ')
 
+    def showPrompt(self):
+        self.terminal.write('\n\r')
+        self.terminal.write('$ ')
 
-class HoneyProtocol(basic.LineOnlyReceiver):
+    def connectionMade(self):
+        log.msg('Connection made')
+        self.terminal.write(CONFIG['motd'])
+        # self.terminal.nextLine()
+        self.showPrompt()
 
+    def lineRecevied(self, line):
+        line = line.strip()
+        if line:
+            self.terminal.write(line)
+            # self.terminal.nextLine()
 
     def dataReceived(self, data):
-        log.msg('Got data:', data)
-        if data == '\x03':
-            self.transport.loseConnection()
-            return
-        elif data == '\r':
-            data = '\r\n'
-
-        self.transport.write(data)
-
+        if data == '\r':
+            self.newLine()
+        self.terminal.write(data)
 
 
 @implementer(ISession)
@@ -45,11 +54,13 @@ class HoneyAvatar(avatar.ConchUser):
     '''
 
     def __init__(self, username):
+        log.msg('Avatar being created')
         avatar.ConchUser.__init__(self)
         self.username = username
         self.channelLookup.update({'session': session.SSHSession})
 
     def openShell(self, transport):
+        log.msg('Protocol being setup')
         protocol = HoneyProtocol()
         protocol.makeConnection(transport)
         transport.makeConnection(session.wrapProtocol(protocol))
@@ -64,7 +75,7 @@ class HoneyAvatar(avatar.ConchUser):
         pass
 
 
-@implementer(portal.IRealm)
+@implementer(IRealm)
 class HoneyRealm(object):
     '''
     A realm is a factory that returns avatars after authentication is made
@@ -78,19 +89,72 @@ class HoneyRealm(object):
             raise NotImplementedError('No supported interfaces found')
 
 
-factory = SSHFactory()
-factory.privateKeys = {'ssh-rsa': private_key}
-factory.publicKeys = {'ssh-rsa': public_key}
-checker = checkers.InMemoryUsernamePasswordDatabaseDontUse()
-checker.addUser('root', 'password')
-portal = portal.Portal(HoneyRealm())
-portal.registerChecker(checker)
+def _get_config():
+    '''
+    setups the config from config.yml
 
-factory.portal = portal
+    TODO: This should really validate it as well for required parts
+    '''
+    with open('./config.yml') as config_file:
+        text = config_file.read()
+
+    config = yaml.load(text)
+    return config
 
 
+def _create_private_and_public_keys():
+    with open('./demo.pem') as pipe:
+        private_blob = pipe.read()
+        private_key = keys.Key.fromString(data=private_blob)
 
-reactor.listenTCP(2000, factory)
+    with open('./demo.pub') as pipe:
+        public_blob = pipe.read()
+        public_key = keys.Key.fromString(data=public_blob)
 
-log.msg('Starting up')
-reactor.run()
+    return (private_key, public_key)
+
+
+def _get_and_setup_factory(checker, portal):
+    '''
+    creates and adds sshkeys and portal to factory
+    '''
+    factory = SSHFactory()
+    (private_key, public_key) = _create_private_and_public_keys()
+    factory.privateKeys = {'ssh-rsa': private_key}
+    factory.publicKeys = {'ssh-rsa': public_key}
+    factory.portal = portal
+    return factory
+
+
+def _get_checker():
+    '''
+    creates login:password based on config
+    '''
+    checker = checkers.InMemoryUsernamePasswordDatabaseDontUse()
+    checker.addUser(CONFIG['username'], CONFIG['password'])
+    return checker
+
+
+def _get_portal(checker):
+    '''
+    creates portal and adds realm and checker
+    '''
+    portal = Portal(HoneyRealm())
+    portal.registerChecker(checker)
+    return portal
+
+
+if __name__ == '__main__':
+    log.msg('Reading config')
+    global CONFIG
+    CONFIG = _get_config()
+    log.msg('Config:')
+    log.msg('Creating checker')
+    checker = _get_checker()
+    log.msg('Creating portal')
+    portal = _get_portal(checker)
+    log.msg('Setting up factory')
+    factory = _get_and_setup_factory(checker, portal)
+    reactor.listenTCP(CONFIG['port'], factory)
+    log.msg('Starting up')
+    reactor.run()
