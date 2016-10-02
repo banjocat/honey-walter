@@ -1,6 +1,6 @@
 import sys
 
-from twisted.conch import recvline, avatar
+from twisted.conch import manhole, avatar
 from twisted.conch.interfaces import IConchUser, ISession
 from twisted.conch.ssh import keys, session
 from twisted.cred import checkers
@@ -18,7 +18,7 @@ from parser import parse_input
 log.startLogging(sys.stdout)
 
 
-class HoneyProtocol(recvline.HistoricRecvLine):
+class HoneyProtocol(manhole.Manhole):
     '''
     This is the bulk of the logic that handles all connections
     '''
@@ -30,14 +30,15 @@ class HoneyProtocol(recvline.HistoricRecvLine):
 
     def connectionMade(self):
         log.msg('Connection made')
-        recvline.HistoricRecvLine.connectionMade(self)
+        super(HoneyProtocol, self).connectionMade()
         self.terminal.write(CONFIG['motd'])
         self.terminal.nextLine()
         self.showPrompt()
 
     def lineReceived(self, line):
         log.msg('line received')
-        output = parse_input(line)
+        command = line.strip()
+        output = parse_input(command)
         self.terminal.write(output)
         self.terminal.nextLine()
         self.showPrompt()
