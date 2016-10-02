@@ -9,5 +9,7 @@ password: password
 port: 2000
 
 simple_commands:
-    - whoami: root
+    whoami:
+        output: root
+
 

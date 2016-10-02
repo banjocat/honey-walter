@@ -1,3 +1,4 @@
+from config import CONFIG
 
 def parse_input(line):
     cmd_list = line.split(' ')

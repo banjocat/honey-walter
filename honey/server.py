@@ -1,6 +1,5 @@
 import sys
 
-import yaml
 from twisted.conch import recvline, avatar
 from twisted.conch.interfaces import IConchUser, ISession
 from twisted.conch.ssh import keys, session
@@ -12,6 +11,7 @@ from twisted.conch.ssh.factory import SSHFactory
 from zope.interface import implementer
 from twisted.python import log
 
+from config import CONFIG
 from parser import parse_input
 
 
@@ -53,8 +53,7 @@ class HoneyAvatar(avatar.ConchUser):
         log.msg('Avatar being created')
         avatar.ConchUser.__init__(self)
         self.username = username
-        self.channelLookup.update({'session': session.SSHSession})
-
+        self.channelLookup.update({'session': session.SSHSession}) 
     def openShell(self, transport):
         log.msg('Protocol being setup')
         protocol = insults.ServerProtocol(HoneyProtocol, self)
@@ -85,17 +84,6 @@ class HoneyRealm(object):
             raise NotImplementedError('No supported interfaces found')
 
 
-def _get_config():
-    '''
-    setups the config from config.yml
-
-    TODO: This should really validate it as well for required parts
-    '''
-    with open('./config.yml') as config_file:
-        text = config_file.read()
-
-    config = yaml.load(text)
-    return config
 
 
 def _create_private_and_public_keys():
@@ -141,10 +129,6 @@ def _get_portal(checker):
 
 
 if __name__ == '__main__':
-    log.msg('Reading config')
-    global CONFIG
-    CONFIG = _get_config()
-    log.msg('Config:')
     log.msg('Creating checker')
     checker = _get_checker()
     log.msg('Creating portal')
