@@ -53,7 +53,8 @@ class HoneyAvatar(avatar.ConchUser):
         log.msg('Avatar being created')
         avatar.ConchUser.__init__(self)
         self.username = username
-        self.channelLookup.update({'session': session.SSHSession}) 
+        self.channelLookup.update({'session': session.SSHSession})
+
     def openShell(self, transport):
         log.msg('Protocol being setup')
         protocol = insults.ServerProtocol(HoneyProtocol, self)
