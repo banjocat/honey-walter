@@ -43,6 +43,11 @@ class HoneyProtocol(manhole.Manhole):
         self.terminal.nextLine()
         self.showPrompt()
 
+    def handle_INT(self):
+        self.terminal.write('^C')
+        self.terminal.nextLine()
+        self.showPrompt()
+
 
 @implementer(ISession)
 class HoneyAvatar(avatar.ConchUser):
