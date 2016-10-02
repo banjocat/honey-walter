@@ -84,16 +84,9 @@ class HoneyRealm(object):
             raise NotImplementedError('No supported interfaces found')
 
 
-
-
 def _create_private_and_public_keys():
-    with open('./demo.pem') as pipe:
-        private_blob = pipe.read()
-        private_key = keys.Key.fromString(data=private_blob)
-
-    with open('./demo.pub') as pipe:
-        public_blob = pipe.read()
-        public_key = keys.Key.fromString(data=public_blob)
+    private_key = keys.Key.fromString(data=CONFIG['pem_key'])
+    public_key = keys.Key.fromString(data=CONFIG['pub_key'])
 
     return (private_key, public_key)
 
