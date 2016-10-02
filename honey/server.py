@@ -38,6 +38,7 @@ class HoneyProtocol(manhole.Manhole):
     def lineReceived(self, line):
         log.msg('line received')
         command = line.strip()
+        log.msg('input:', command)
         output = parse_input(command)
         log.msg('output:', output)
         self.terminal.write(output)
