@@ -11,6 +11,12 @@ port: 2000
 simple_commands:
     whoami:
         output: root
+    sudo:
+        output: You are already root why use sudo, are you dumb?
+    ls:
+        output: bin boot dev etc home lib media mnt opt root sbin
+
+
 
 
 pem_key: |

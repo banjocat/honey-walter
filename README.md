@@ -15,7 +15,7 @@ Like all my practice projects I setup goals that I try to reach.
     * wget
     * ps
     * ~~whoami~~
-    * ls
+    * ~~ls~~
 * ~~MOTD should be configurable~~
 * "user" and "password" should be configurable
 
