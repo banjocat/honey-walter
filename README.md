@@ -16,7 +16,7 @@ Like all my practice projects I setup goals that I try to reach.
     * ps
     * ~~whoami~~
     * ls
-* MOTD should be configurable
+* ~~MOTD should be configurable~~
 * "user" and "password" should be configurable
 
 
@@ -24,7 +24,7 @@ Like all my practice projects I setup goals that I try to reach.
 * Fake directory structure to then allow below commands
     * cd
     * ls (better version than above)
-* Configuration file to vary honey pot
+* ~~Configuration file to vary honey pot~~
 
 
 ## Thanks
