@@ -7,9 +7,12 @@ from twisted.conch.ssh import keys, session
 from twisted.cred import checkers
 from twisted.cred.portal import Portal, IRealm
 from twisted.internet import reactor
+from twisted.conch.insults import insults
 from twisted.conch.ssh.factory import SSHFactory
 from zope.interface import implementer
 from twisted.python import log
+
+from parser import parse_input
 
 
 log.startLogging(sys.stdout)
@@ -19,32 +22,25 @@ class HoneyProtocol(recvline.HistoricRecvLine):
     '''
     This is the bulk of the logic that handles all connections
     '''
-    def __init__(self):
-        log.msg('Protocol created')
-
-    def newLine(self):
-        self.terminal.write('\n\r$ ')
+    def __init__(self, user):
+        self.user = user
 
     def showPrompt(self):
-        self.terminal.write('\n\r')
         self.terminal.write('$ ')
 
     def connectionMade(self):
         log.msg('Connection made')
+        recvline.HistoricRecvLine.connectionMade(self)
         self.terminal.write(CONFIG['motd'])
-        # self.terminal.nextLine()
+        self.terminal.nextLine()
         self.showPrompt()
 
-    def lineRecevied(self, line):
-        line = line.strip()
-        if line:
-            self.terminal.write(line)
-            # self.terminal.nextLine()
-
-    def dataReceived(self, data):
-        if data == '\r':
-            self.newLine()
-        self.terminal.write(data)
+    def lineReceived(self, line):
+        log.msg('line received')
+        output = parse_input(line)
+        self.terminal.write(output)
+        self.terminal.nextLine()
+        self.showPrompt()
 
 
 @implementer(ISession)
@@ -61,7 +57,7 @@ class HoneyAvatar(avatar.ConchUser):
 
     def openShell(self, transport):
         log.msg('Protocol being setup')
-        protocol = HoneyProtocol()
+        protocol = insults.ServerProtocol(HoneyProtocol, self)
         protocol.makeConnection(transport)
         transport.makeConnection(session.wrapProtocol(protocol))
 
