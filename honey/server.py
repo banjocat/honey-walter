@@ -38,7 +38,6 @@ class HoneyProtocol(manhole.Manhole):
 
     def lineReceived(self, line):
         logging.info('line received')
-        logging.info('Manhole: %s', dir(self))
         command = line.strip()
         output = parse_input(command)
         self.terminal.write(output)
@@ -65,7 +64,6 @@ class HoneyAvatar(avatar.ConchUser):
 
     def openShell(self, transport):
         logging.info('Protocol being setup')
-        logging.info('avatar: %s', dir(self))
         protocol = insults.ServerProtocol(HoneyProtocol, self)
         protocol.makeConnection(transport)
         transport.makeConnection(session.wrapProtocol(protocol))
