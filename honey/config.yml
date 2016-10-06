@@ -1,20 +1,21 @@
 
 
-
-motd: |
-    Welcome to the server
-
 username: root
 password: password
 port: 2000
 
+motd: |
+    Welcome to the server
+
+
 simple_commands:
-    whoami:
-        output: root
-    sudo:
-        output: You are already root why use sudo, are you dumb?
-    ls:
-        output: bin boot dev etc home lib media mnt opt root sbin
+    whoami: root
+    sudo: You are already root why use sudo, are you dumb?
+    ls: bin boot dev etc home lib media mnt opt root sbin
+    ps: |
+        PID TTY          TIME CMD
+        3753 pts/18   00:00:00 bash
+        3795 pts/18   00:00:00 ps
 
 
 

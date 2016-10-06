@@ -8,11 +8,9 @@ def parse_input(line):
     # remainaing is args
     # args = cmd_list[1:]
     command_list = CONFIG['simple_commands']
-    result = command_list.get(command)
-    if not result:
+    output = command_list.get(command)
+    if not output:
         output = not_found(command)
-    else:
-        output = result['output']
     return output
 
 

@@ -1,4 +1,4 @@
-import sys
+import logging
 
 from twisted.conch import manhole, avatar
 from twisted.conch.interfaces import IConchUser, ISession
@@ -14,8 +14,9 @@ from twisted.python import log
 from config import CONFIG
 from parser import parse_input
 
-
-log.startLogging(sys.stdout)
+observer = log.PythonLoggingObserver()
+observer.start()
+logging.basicConfig(format='%(asctime)s %(message)s', level=logging.INFO)
 
 
 class HoneyProtocol(manhole.Manhole):
@@ -29,18 +30,17 @@ class HoneyProtocol(manhole.Manhole):
         self.terminal.write('$ ')
 
     def connectionMade(self):
-        log.msg('Connection made')
+        logging.info('Connection made')
         super(HoneyProtocol, self).connectionMade()
         self.terminal.write(CONFIG['motd'])
         self.terminal.nextLine()
         self.showPrompt()
 
     def lineReceived(self, line):
-        log.msg('line received')
+        logging.info('line received')
+        logging.info('Manhole: %s', dir(self))
         command = line.strip()
-        log.msg('input:', command)
         output = parse_input(command)
-        log.msg('output:', output)
         self.terminal.write(output)
         self.terminal.nextLine()
         self.showPrompt()
@@ -58,13 +58,14 @@ class HoneyAvatar(avatar.ConchUser):
     '''
 
     def __init__(self, username):
-        log.msg('Avatar being created')
+        logging.info('Avatar being created')
         avatar.ConchUser.__init__(self)
         self.username = username
         self.channelLookup.update({'session': session.SSHSession})
 
     def openShell(self, transport):
-        log.msg('Protocol being setup')
+        logging.info('Protocol being setup')
+        logging.info('avatar: %s', dir(self))
         protocol = insults.ServerProtocol(HoneyProtocol, self)
         protocol.makeConnection(transport)
         transport.makeConnection(session.wrapProtocol(protocol))
@@ -87,7 +88,7 @@ class HoneyRealm(object):
 
     def requestAvatar(self, avatarId, mind, *interfaces):
         if IConchUser in interfaces:
-            log.msg('Interface IConchUser found')
+            logging.info('Interface IConchUser found')
             return interfaces[0], HoneyAvatar(avatarId), lambda: None
         else:
             raise NotImplementedError('No supported interfaces found')
@@ -131,12 +132,12 @@ def _get_portal(checker):
 
 
 if __name__ == '__main__':
-    log.msg('Creating checker')
+    logging.info('Creating checker')
     checker = _get_checker()
-    log.msg('Creating portal')
+    logging.info('Creating portal')
     portal = _get_portal(checker)
-    log.msg('Setting up factory')
+    logging.info('Setting up factory')
     factory = _get_and_setup_factory(checker, portal)
     reactor.listenTCP(CONFIG['port'], factory)
-    log.msg('Starting up')
+    logging.info('Starting up')
     reactor.run()
