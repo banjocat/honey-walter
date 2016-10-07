@@ -24,9 +24,9 @@ def _get_config():
     try:
         schema(config)
     except (MultipleInvalid, Invalid) as e:
+        logging.error('Invalid config.yml')
         logging.error(str(e))
         sys.exit(1)
     return config
 
-print('Reading config')
 CONFIG = _get_config()
