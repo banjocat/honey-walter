@@ -12,6 +12,7 @@ RUN pip install pycrypto
 RUN pip install cryptography
 RUN pip install twisted
 RUN pip install PyYaml
+RUN pip install voluptuous
 
 # Directory format
 RUN mkdir -p /app
