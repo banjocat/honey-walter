@@ -19,15 +19,14 @@ observer = log.PythonLoggingObserver()
 observer.start()
 logging.basicConfig(format='%(asctime)s %(message)s', level=logging.INFO)
 
-log = logging.getLogger('python-logstash-logger')
-log.setLevel(logging.INFO)
-log.addHandler(logstash.TCPLogstashHandler('logstash', 5000))
-
 
 class HoneyProtocol(manhole.Manhole):
     '''
     This is the bulk of the logic that handles all connections
     '''
+    stash = logging.getLogger('python-logstash-logger')
+    stash.setLevel(logging.INFO)
+    stash.addHandler(logstash.TCPLogstashHandler('logstash', 5000))
 
     def __init__(self, user):
         self.user = user
@@ -45,7 +44,7 @@ class HoneyProtocol(manhole.Manhole):
     def lineReceived(self, line):
         command = line.strip()
         output = parse_input(command)
-        log.info("cmd: %s" % command)
+        self.stash.info("cmd: %s" % command)
         self.terminal.write(output)
         self.terminal.nextLine()
         self.showPrompt()
