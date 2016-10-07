@@ -13,6 +13,7 @@ RUN pip install cryptography
 RUN pip install twisted
 RUN pip install PyYaml
 RUN pip install voluptuous
+RUN pip install python-logstash
 
 # Directory format
 RUN mkdir -p /app
