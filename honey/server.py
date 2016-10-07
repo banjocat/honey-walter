@@ -9,24 +9,16 @@ from twisted.internet import reactor
 from twisted.conch.insults import insults
 from twisted.conch.ssh.factory import SSHFactory
 from zope.interface import implementer
-from twisted.python import log
-import logstash
 
+import honey_logging
 from config import CONFIG
 from parser import parse_input
-
-observer = log.PythonLoggingObserver()
-observer.start()
-logging.basicConfig(format='%(asctime)s %(message)s', level=logging.INFO)
 
 
 class HoneyProtocol(manhole.Manhole):
     '''
     This is the bulk of the logic that handles all connections
     '''
-    stash = logging.getLogger('python-logstash-logger')
-    stash.setLevel(logging.INFO)
-    stash.addHandler(logstash.TCPLogstashHandler('logstash', 5000))
 
     def __init__(self, user):
         self.user = user
@@ -44,7 +36,7 @@ class HoneyProtocol(manhole.Manhole):
     def lineReceived(self, line):
         command = line.strip()
         output = parse_input(command)
-        self.stash.info("cmd: %s" % command)
+        honey_logging.stash.info("cmd: %s" % command)
         self.terminal.write(output)
         self.terminal.nextLine()
         self.showPrompt()
