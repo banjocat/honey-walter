@@ -16,6 +16,11 @@ simple_commands:
         PID TTY          TIME CMD
         3753 pts/18   00:00:00 bash
         3795 pts/18   00:00:00 ps
+    who: |
+        root tty7         2016-10-03 00:52 (:0)
+        root pts/18       2016-10-06 22:01 (:0)
+        root pts/0        2016-10-06 21:56 (:0)
+        root pts/19       2016-10-05 23:36 (:0)
 
 
 

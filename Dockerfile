@@ -7,6 +7,9 @@ RUN apt-get install -y autoconf
 RUN apt-get install -y g++
 
 
+
+
+
 # Pips
 RUN pip install pycrypto
 RUN pip install cryptography
@@ -14,6 +17,10 @@ RUN pip install twisted
 RUN pip install PyYaml
 RUN pip install voluptuous
 RUN pip install python-logstash
+
+
+
+
 
 # Directory format
 RUN mkdir -p /app
