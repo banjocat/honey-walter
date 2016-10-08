@@ -22,28 +22,55 @@ class HoneyProtocol(manhole.Manhole):
 
     def __init__(self, user):
         self.user = user
+        address = self.user.transport.getPeer().address
+        self.log_data = self.get_avatar_identifier_dict(address)
 
     def showPrompt(self):
+        self.terminal.nextLine()
         self.terminal.write('$ ')
 
     def connectionMade(self):
+        '''
+        Called once on initial connection of an Avatar
+        '''
         logging.info('Connection made')
         super(HoneyProtocol, self).connectionMade()
+        self.log_stash('login')
         self.terminal.write(CONFIG['motd'])
-        self.terminal.nextLine()
         self.showPrompt()
 
+    def log_stash(self, msg):
+        honey_logging.stash.info(msg, extra=self.log_data)
+
+    def get_avatar_identifier_dict(self, address):
+        '''
+        Every logstash message has this data
+        '''
+        data = {
+                'protocol': address.type,
+                'ip': address.host,
+                'port': address.port
+                }
+        return data
+
     def lineReceived(self, line):
+        '''
+        Called everytime an avatar sends a line
+        This is where logging and output is done
+        '''
         command = line.strip()
         output = parse_input(command)
-        honey_logging.stash.info("cmd: %s" % command)
+        self.log_data['command'] = command
+        self.log_stash('command')
         self.terminal.write(output)
-        self.terminal.nextLine()
         self.showPrompt()
 
     def handle_INT(self):
+        '''
+        The default INT handler is sloppy
+        Replaced it with something that is more expected
+        '''
         self.terminal.write('^C')
-        self.terminal.nextLine()
         self.showPrompt()
 
 
@@ -61,6 +88,7 @@ class HoneyAvatar(avatar.ConchUser):
 
     def openShell(self, transport):
         logging.info('Protocol being setup')
+        self.transport = transport
         protocol = insults.ServerProtocol(HoneyProtocol, self)
         protocol.makeConnection(transport)
         transport.makeConnection(session.wrapProtocol(protocol))

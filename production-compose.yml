@@ -1,0 +1,32 @@
+version: '2'
+services:
+    honey:
+        image: banjocat/walter_honey:latest
+        ports:
+            - "22:2000"
+        depends_on:
+            - logstash
+
+    elastic:
+        image: elasticsearch:2
+        expose:
+            - 9020
+
+    logstash:
+        image: logstash:2
+        command: logstash -f /etc/logstash/logstash.conf
+        volumes:
+            - "./logstash.conf:/etc/logstash/"
+        expose:
+            - 5000
+        depends_on:
+            - elastic
+
+    kibana:
+        image: kibana:4
+        volumes:
+            - "./kibana.conf:/opt/kibana/config"
+        ports:
+            - "5600:5600"
+        depends_on:
+            - elastic
