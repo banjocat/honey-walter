@@ -5,7 +5,7 @@ import logging
 from voluptuous import Schema, MultipleInvalid, Invalid
 from voluptuous import Required, All, Range, Length
 
-schema = Schema({
+_schema = Schema({
     Required('username', default='root'): All(str, Length(min=1)),
     Required('password', default='password'): All(str, Length(min=1)),
     Required('port'): All(int, Range(min=1, max=65535)),
@@ -22,7 +22,7 @@ def _get_config():
 
     config = yaml.load(text)
     try:
-        schema(config)
+        _schema(config)
     except (MultipleInvalid, Invalid) as e:
         logging.error('Invalid config.yml')
         logging.error(str(e))
