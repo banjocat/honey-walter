@@ -17,7 +17,7 @@ schema = Schema({
 
 
 def _get_config():
-    with open('./config.yml') as config_file:
+    with open('./config/config.yml') as config_file:
         text = config_file.read()
 
     config = yaml.load(text)
