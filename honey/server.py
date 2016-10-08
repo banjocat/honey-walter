@@ -51,6 +51,11 @@ class HoneyProtocol(manhole.Manhole):
         self.showPrompt()
 
     def log_stash(self, msg):
+        '''
+        because this dictionary is resued
+        the logstash call can never be made async
+        probably should not reuse a dictionary here
+        '''
         self.log_data['action'] = msg
         honey_logging.stash.info(msg, extra=self.log_data)
 
