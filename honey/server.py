@@ -24,9 +24,16 @@ class HoneyProtocol(manhole.Manhole):
     It gives a line history and has a rough emulation of a terminal.
     '''
 
-    def __init__(self, user):
-        self.user = user
-        address = self.user.transport.getPeer().address
+    def __init__(self, avatar):
+        '''
+        An avatar is a user.
+        avatar.transport is attached during avatar creation.
+        It has information about how the connection was made.
+        IP being the most important information.
+        self.log_data are the fields that will always be sent to logstash
+        '''
+        self.avatar = avatar
+        address = self.avatar.transport.getPeer().address
         self.log_data = self.get_avatar_identifier_dict(address)
 
     def showPrompt(self):
@@ -35,7 +42,7 @@ class HoneyProtocol(manhole.Manhole):
 
     def connectionMade(self):
         '''
-        Called once on initial connection of an Avatar
+        Called once after authentication and avatar creation
         '''
         logging.info('Connection made')
         super(HoneyProtocol, self).connectionMade()
@@ -44,6 +51,7 @@ class HoneyProtocol(manhole.Manhole):
         self.showPrompt()
 
     def log_stash(self, msg):
+        self.log_data['action'] = msg
         honey_logging.stash.info(msg, extra=self.log_data)
 
     def get_avatar_identifier_dict(self, address):
