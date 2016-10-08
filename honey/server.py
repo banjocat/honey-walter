@@ -17,7 +17,11 @@ from parser import parse_input
 
 class HoneyProtocol(manhole.Manhole):
     '''
-    This is the bulk of the logic that handles all connections
+    After authentication and Avatar(user) creation
+    This is where all connections end up.
+    Async calls at lineReceived
+    Manhole protocol has a lot of magic.
+    It gives a line history and has a rough emulation of a terminal.
     '''
 
     def __init__(self, user):
