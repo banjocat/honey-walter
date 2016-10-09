@@ -1,5 +1,3 @@
-import logging
-
 from twisted.conch import manhole, avatar
 from twisted.conch.interfaces import IConchUser, ISession
 from twisted.conch.ssh import keys, session
@@ -34,7 +32,8 @@ class HoneyProtocol(manhole.Manhole):
         '''
         self.avatar = avatar
         address = self.avatar.transport.getPeer().address
-        self.log_data = self.get_avatar_identifier_dict(address)
+        self.ip = address.host
+        self.src_port = address.port
 
     def showPrompt(self):
         self.terminal.nextLine()
@@ -44,31 +43,23 @@ class HoneyProtocol(manhole.Manhole):
         '''
         Called once after authentication and avatar creation
         '''
-        logging.info('Connection made')
+        honey_logging.console.info('Connection made')
         super(HoneyProtocol, self).connectionMade()
         self.log_stash('login')
         self.terminal.write(CONFIG['motd'])
         self.showPrompt()
 
-    def log_stash(self, msg):
+    def log_stash(self, msg, command=None):
         '''
-        because this dictionary is resued
-        the logstash call can never be made async
-        probably should not reuse a dictionary here
-        '''
-        self.log_data['action'] = msg
-        honey_logging.stash.info(msg, extra=self.log_data)
-
-    def get_avatar_identifier_dict(self, address):
-        '''
-        Every logstash message has this data
+        Creates and sends a message to logstash
         '''
         data = {
-                'protocol': address.type,
-                'ip': address.host,
-                'port': address.port
+                'ip': self.ip,
+                'port': self.src_port,
+                'action': msg,
+                'command': command
                 }
-        return data
+        honey_logging.stash.info(msg, extra=data)
 
     def lineReceived(self, line):
         '''
@@ -77,8 +68,7 @@ class HoneyProtocol(manhole.Manhole):
         '''
         command = line.strip()
         output = parse_input(command)
-        self.log_data['command'] = command
-        self.log_stash('command')
+        self.log_stash('command', command)
         self.terminal.write(output)
         self.showPrompt()
 
@@ -98,13 +88,13 @@ class HoneyAvatar(avatar.ConchUser):
     '''
 
     def __init__(self, username):
-        logging.info('Avatar being created')
+        honey_logging.console.info('Avatar being created')
         avatar.ConchUser.__init__(self)
         self.username = username
         self.channelLookup.update({'session': session.SSHSession})
 
     def openShell(self, transport):
-        logging.info('Protocol being setup')
+        honey_logging.console.info('Protocol being setup')
         self.transport = transport
         protocol = insults.ServerProtocol(HoneyProtocol, self)
         protocol.makeConnection(transport)
@@ -128,7 +118,7 @@ class HoneyRealm(object):
 
     def requestAvatar(self, avatarId, mind, *interfaces):
         if IConchUser in interfaces:
-            logging.info('Interface IConchUser found')
+            honey_logging.console.info('Interface IConchUser found')
             return interfaces[0], HoneyAvatar(avatarId), lambda: None
         else:
             raise NotImplementedError('No supported interfaces found')
@@ -172,12 +162,12 @@ def _get_portal(checker):
 
 
 if __name__ == '__main__':
-    logging.info('Creating checker')
+    honey_logging.console.info('Creating checker')
     checker = _get_checker()
-    logging.info('Creating portal')
+    honey_logging.console.info('Creating portal')
     portal = _get_portal(checker)
-    logging.info('Setting up factory')
+    honey_logging.console.info('Setting up factory')
     factory = _get_and_setup_factory(checker, portal)
     reactor.listenTCP(CONFIG['port'], factory)
-    logging.info('Starting up')
+    honey_logging.console.info('Starting up')
     reactor.run()

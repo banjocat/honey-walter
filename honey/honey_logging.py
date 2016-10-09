@@ -12,5 +12,8 @@ _observer.start()
 logging.basicConfig(format='%(asctime)s %(message)s', level=logging.INFO)
 
 # Creates the logger to use to logstash
-stash = logging.getLogger('python-logstash-logger')
+stash = logging.getLogger('logstash')
 stash.addHandler(logstash.TCPLogstashHandler('logstash', 5000))
+
+# Creates logger for local and console
+console = logging.getLogger('console')
