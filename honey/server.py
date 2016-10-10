@@ -49,17 +49,21 @@ class HoneyProtocol(manhole.Manhole):
         self.terminal.write(CONFIG['motd'])
         self.showPrompt()
 
-    def log_stash(self, msg, command=None):
+    def connectionLost(self, reason):
+        self.log_stash('logout', reason)
+        super(HoneyProtocol, self).connectionLost(reason)
+
+    def log_stash(self, action, output=None):
         '''
         Creates and sends a message to logstash
         '''
         data = {
                 'ip': self.ip,
                 'port': self.src_port,
-                'action': msg,
-                'command': command
+                'action': action,
+                'output': output
                 }
-        honey_logging.stash.info(msg, extra=data)
+        honey_logging.stash.info('logstash-honey', extra=data)
 
     def lineReceived(self, line):
         '''
