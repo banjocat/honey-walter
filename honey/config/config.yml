@@ -12,6 +12,7 @@ simple_commands:
     whoami: root
     sudo: You are already root why use sudo, are you dumb?
     ls: bin boot dev etc home lib media mnt opt root sbin
+    reboot: No
     ps: |
         PID TTY          TIME CMD
         3753 pts/18   00:00:00 bash
