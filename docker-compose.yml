@@ -10,6 +10,15 @@ services:
         depends_on:
             - logstash
 
+    nginx:
+        image: nginx:1.10-alpine
+        volumes:
+            - "./nginx.conf/nginx.conf:/etc/nginx/nginx.conf"
+        ports:
+            - "8888:80"
+        depends_on:
+            - kibana
+
     elastic:
         image: elasticsearch:2
         expose:
@@ -29,8 +38,8 @@ services:
         image: kibana:4
         volumes:
             - "./kibana.conf:/opt/kibana/config"
-        ports:
-            - "5600:5600"
+        expose:
+            - 5600
         depends_on:
             - elastic
 
