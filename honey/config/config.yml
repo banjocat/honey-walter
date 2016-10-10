@@ -23,6 +23,7 @@ simple_commands:
         root pts/19       2016-10-05 23:36 (:0)
     reboot: No. I will not
     apt-get: Debian sucks.
+    apt: Debian sucks.
     yum: Red hat sucks.
     pacman: Archlinux sucks.
     zypper: OpenSUSE sucks.
