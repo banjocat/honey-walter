@@ -27,6 +27,8 @@ Like all my practice projects I setup goals that I try to reach.
     * ls (better version than above)
 * ~~Configuration file to vary honey pot~~
 
+## Puppet
+I used masterless puppet to deploy. Just because a current client uses puppet and needed to learn more about it.
 
 ## Thanks
 Thank you for tutorial on twisted SSH at http://as.ynchrono.us/2011/03/twisted-conch-in-60-seconds.html
