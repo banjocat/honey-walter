@@ -1,4 +1,5 @@
 #### In development
+[![CircleCI](https://circleci.com/gh/banjocat/honey-walter.svg?style=svg)](https://circleci.com/gh/banjocat/honey-walter)
 
 # Python twisted practice project
 
