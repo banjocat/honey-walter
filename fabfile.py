@@ -5,7 +5,7 @@ from fabric.api import settings, hosts, run, put
 def deploy():
     with settings(user='root'):
         put('./puppet', '/tmp')
-        run('puppet apply --modulepath /tmp/puppet/modules /tmp/puppet/manifests/init.pp')
+        run('puppet apply --modulepath /tmp/puppet/modules /tmp/puppet/init.pp')
 
 
 @hosts('jackmuratore.com')
