@@ -33,6 +33,5 @@ exec { 'docker_pull':
 ->
 docker_compose { '/app/honey_walter/docker-compose.yml':
     ensure => present,
-    up_args => '--build',
 }
 }
