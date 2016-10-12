@@ -15,7 +15,6 @@ services:
               #- "./nginx.conf/demo_server.key:/etc/nginx/site.key"
               #- "./nginx.conf/demo_client.crt:/etc/nginx/client.crt"
         ports:
-            - "8888:80"
             - "9999:443"
         depends_on:
             - kibana
