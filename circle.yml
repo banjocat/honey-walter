@@ -6,9 +6,9 @@ machine:
 
 dependencies:
     pre:
-        - sudo pip install --upgrade pip
-        - sudo pip install docker-compose
-        - sudo pip install fabric
+        - pip install --upgrade pip
+        - pip install docker-compose
+        - pip install fabric
 
 test:
     pre:
