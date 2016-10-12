@@ -1,0 +1,49 @@
+version: '2'
+services:
+    honey:
+        image: banjocat/walter_honey:latest
+        build: .
+        volumes:
+            - ./honey/.:/app
+        ports:
+            - "2000:2000"
+        depends_on:
+            - logstash
+
+    nginx:
+        image: nginx:1.10-alpine
+        volumes:
+            - "./nginx.conf/nginx.conf:/etc/nginx/nginx.conf"
+            - "./nginx.conf/demo_server.crt:/etc/nginx/site.crt"
+            - "./nginx.conf/demo_server.key:/etc/nginx/site.key"
+            - "./nginx.conf/demo_client.crt:/etc/nginx/client.crt"
+        ports:
+            - "8888:80"
+            - "9999:443"
+        depends_on:
+            - kibana
+
+    elastic:
+        image: elasticsearch:2
+        expose:
+            - 9020
+
+    logstash:
+        image: logstash:2
+        command: logstash -f /etc/logstash/logstash.conf
+        volumes:
+            - "./logstash.conf:/etc/logstash/"
+        expose:
+            - 5000
+        depends_on:
+            - elastic
+
+    kibana:
+        image: kibana:4
+        volumes:
+            - "./kibana.conf:/opt/kibana/config"
+        expose:
+            - 5600
+        depends_on:
+            - elastic
+
