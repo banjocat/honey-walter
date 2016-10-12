@@ -38,7 +38,7 @@ services:
     kibana:
         image: kibana:4
         volumes:
-            - "/app/honey_walter/kibana.conf:/opt/kibana/config/kibana.conf"
+            - "/app/honey_walter/kibana.yml:/opt/kibana/config/kibana.yml"
         expose:
             - 5600
         depends_on:
