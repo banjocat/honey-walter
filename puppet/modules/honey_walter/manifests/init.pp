@@ -26,7 +26,13 @@ file { '/app/honey_walter/nginx.conf':
     source => 'puppet:///modules/honey_walter/nginx.conf',
 }
 ->
+exec { 'docker_pull':
+    command => 'docker-compose -f /app/honey_walter/docker-compose.yml pull',
+    path => '/usr/local/bin',
+}
+->
 docker_compose { '/app/honey_walter/docker-compose.yml':
     ensure => present,
+    up_args => '--build',
 }
 }
