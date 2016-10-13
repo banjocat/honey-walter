@@ -11,9 +11,9 @@ services:
         image: nginx:1.10-alpine
         volumes:
             - "/app/honey_walter/nginx.conf:/etc/nginx/nginx.conf"
-              #- "./nginx.conf/demo_server.crt:/etc/nginx/site.crt"
-              #- "./nginx.conf/demo_server.key:/etc/nginx/site.key"
-              #- "./nginx.conf/demo_client.crt:/etc/nginx/client.crt"
+            - "/etc/ssl/honey_walter/ca.crt:/etc/nginx/site.crt"
+            - "/etc/ssl/honey_walter/ca.key:/etc/nginx/site.key"
+            - "/etc/ssl/honey_walter/client.crt:/etc/nginx/client.crt"
         ports:
             - "9999:443"
         depends_on:
