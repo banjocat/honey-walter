@@ -4,3 +4,6 @@ host: "0.0.0.0"
 
 elasticsearch_url: "http://elastic:9200"
 
+elasticsearch.username: "walter"
+elasticsearch.password: "walter"
+
