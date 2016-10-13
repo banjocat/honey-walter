@@ -28,6 +28,10 @@ class honey_walter {
         source => 'puppet:///modules/honey_walter/nginx.conf',
     }
     ->
+    file { '/app/honey_walter/elastic_volume':
+        ensure => directory
+    }
+    ->
     exec { 'docker_pull':
         command => 'docker-compose -f /app/honey_walter/docker-compose.yml pull',
         path => '/usr/local/bin',

@@ -21,6 +21,8 @@ services:
 
     elastic:
         image: elasticsearch:2
+        volumes:
+            - "/app/honey_walter/elastic_volume:/usr/share/elasticsearch/data"
         expose:
             - 9020
 
