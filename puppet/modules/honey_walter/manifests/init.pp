@@ -32,6 +32,10 @@ class honey_walter {
         ensure => directory
     }
     ->
+    file { '/app/honey_walter/kibana_volume':
+        ensure => directory
+    }
+    ->
     exec { 'docker_pull':
         command => 'docker-compose -f /app/honey_walter/docker-compose.yml pull',
         path => '/usr/local/bin',
