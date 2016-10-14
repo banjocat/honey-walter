@@ -128,6 +128,19 @@ class HoneyRealm(object):
             raise NotImplementedError('No supported interfaces found')
 
 
+class HoneyFactory(SSHFactory):
+
+    def getService(self, transport, service):
+        address = transport.getPeer().address
+        data = {
+                'ip': address.host,
+                'port': address.port,
+                'action': 'auth'
+                }
+        honey_logging.stash.info('logstash-honey', extra=data)
+        return SSHFactory.getService(self, transport, service)
+
+
 def _create_private_and_public_keys():
     private_key = keys.Key.fromString(data=CONFIG['pem_key'])
     public_key = keys.Key.fromString(data=CONFIG['pub_key'])
@@ -139,7 +152,7 @@ def _get_and_setup_factory(checker, portal):
     '''
     creates and adds sshkeys and portal to factory
     '''
-    factory = SSHFactory()
+    factory = HoneyFactory()
     (private_key, public_key) = _create_private_and_public_keys()
     factory.privateKeys = {'ssh-rsa': private_key}
     factory.publicKeys = {'ssh-rsa': public_key}
