@@ -32,6 +32,7 @@ class HoneyProtocol(manhole.Manhole):
         '''
         self.avatar = avatar
         address = self.avatar.transport.getPeer().address
+        self.transport = self.avatar.transport
         self.ip = address.host
         self.src_port = address.port
 
@@ -71,8 +72,11 @@ class HoneyProtocol(manhole.Manhole):
         This is where logging and output is done
         '''
         command = line.strip()
-        output = parse_input(command)
         self.log_stash('command', command)
+        if command == 'exit':
+            self.transport.loseConnection()
+            return
+        output = parse_input(command)
         self.terminal.write(output)
         self.showPrompt()
 
