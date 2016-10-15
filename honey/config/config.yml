@@ -30,6 +30,8 @@ simple_commands:
     emerge: Gentoo sucks.
     brew: Macs really suck.
     pizza: Tastes good.
+    free: "              total        used        free      shared  buff/cache   available\nMem:       16332688     4012628     4574188     1173860     7745872    10597228\nSwap:      16674300           0    16674300"
+
 
 
 
