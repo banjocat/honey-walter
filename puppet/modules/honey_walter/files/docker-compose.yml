@@ -46,4 +46,8 @@ services:
             - 5600
         depends_on:
             - elastic
+    freegeoip:
+        expose:
+            - 8080
+        image: fiorix/freegeoip
 

@@ -42,6 +42,7 @@ class honey_walter {
     }
     ->
     docker_compose { '/app/honey_walter/docker-compose.yml':
-        ensure => present,
+        ensure  => present,
+        up_args => '--remove-orphans',
     }
 }
