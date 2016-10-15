@@ -8,6 +8,7 @@ RUN pip install twisted
 RUN pip install PyYaml
 RUN pip install voluptuous
 RUN pip install python-logstash
+RUN pip install requests
 
 
 

@@ -2,6 +2,8 @@ from config import CONFIG
 
 
 def parse_input(line):
+    if not line:
+        return ""
     line_list = line.split(' ')
     # Not sure what to do with args yet
     command, args = line_list[0], line_list[1:]

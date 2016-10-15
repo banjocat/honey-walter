@@ -42,8 +42,14 @@ services:
         image: kibana:4
         volumes:
             - "./kibana.conf:/opt/kibana/config"
+        ports:
+            - "8001:8080"
         expose:
             - 5600
         depends_on:
             - elastic
+    freegeoip:
+        expose:
+            - 8080
+        image: fiorix/freegeoip
 

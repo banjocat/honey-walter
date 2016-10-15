@@ -1,3 +1,4 @@
+import requests
 from twisted.conch import manhole, avatar
 from twisted.conch.interfaces import IConchUser, ISession
 from twisted.conch.ssh import keys, session
@@ -33,8 +34,8 @@ class HoneyProtocol(manhole.Manhole):
         self.avatar = avatar
         address = self.avatar.transport.getPeer().address
         self.transport = self.avatar.transport
-        self.ip = address.host
-        self.src_port = address.port
+        ip = address.host
+        self.location = ip_to_location(ip)
 
     def showPrompt(self):
         self.terminal.nextLine()
@@ -59,8 +60,10 @@ class HoneyProtocol(manhole.Manhole):
         Creates and sends a message to logstash
         '''
         data = {
-                'ip': self.ip,
-                'port': self.src_port,
+                'ip': self.location['ip'],
+                'country': self.location['country_code'],
+                'region': self.location['region_code'],
+                'city': self.location['city'],
                 'action': action,
                 'output': output
                 }
@@ -135,10 +138,13 @@ class HoneyRealm(object):
 class HoneyFactory(SSHFactory):
 
     def getService(self, transport, service):
-        address = transport.getPeer().address
+        ip = transport.getPeer().address.host
+        location = ip_to_location(ip)
         data = {
-                'ip': address.host,
-                'port': address.port,
+                'ip': location['ip'],
+                'country': location['country_code'],
+                'region': location['region_code'],
+                'city': location['city'],
                 'action': 'auth'
                 }
         honey_logging.stash.info('logstash-honey', extra=data)
@@ -162,6 +168,11 @@ def _get_and_setup_factory(checker, portal):
     factory.publicKeys = {'ssh-rsa': public_key}
     factory.portal = portal
     return factory
+
+
+def ip_to_location(ip):
+    r = requests.get('http://freegeoip:8080/json/%s' % ip)
+    return r.json()
 
 
 def _get_checker():
