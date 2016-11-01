@@ -13,8 +13,8 @@ Like all my practice projects I setup goals that I try to reach.
 * ~~logs all actions of user~~
 * should allow the following commands
     * cat
-    * wget
-    * ps
+    * ~~wget~~
+    * ~~ps~~
     * ~~whoami~~
     * ~~ls~~
 * ~~MOTD should be configurable~~
