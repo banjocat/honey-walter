@@ -10,17 +10,37 @@ motd: |
 
 simple_commands:
     whoami: root
-    sudo: You are already root why use sudo, are you dumb?
+
+    sudo: You are already root why use sudo, are you dumb?  
     ls: bin boot dev etc home lib media mnt opt root sbin
     ps: |
         PID TTY          TIME CMD
         3753 pts/18   00:00:00 bash
         3795 pts/18   00:00:00 ps
+
     who: |
         root tty7         2016-10-03 00:52 (:0)
         root pts/18       2016-10-06 22:01 (:0)
         root pts/0        2016-10-06 21:56 (:0)
         root pts/19       2016-10-05 23:36 (:0)
+
+    w: |
+        22:41:05 up 1 day,  3:38,  6 users,  load average: 1.41, 1.94, 1.96
+        USER     TTY      FROM             LOGIN@   IDLE   JCPU   PCPU WHAT
+        root    tty7     :0               Sun19   27:37m  8:59   0.59s /sbin/upstart --user
+        root    pts/4    :0               Sun20   24:17m  0.05s  0.05s /bin/bash
+        root    pts/19   :0               Sun22   24:18m  0.05s  0.05s /bin/bash
+        root    pts/20   :0               19:13    0.00s  0.03s  0.00s w
+        root    pts/21   :0               22:40    3.00s  1.74s  1.71s vim docker-compose.yml
+
+    wget: |
+        Resolving address... 216.58.219.206, 2607:f8b0:4006:807::200e
+        Connecting to address|173.194.208.99|:80... connected.
+        HTTP request sent, awaiting response... 200 OK
+        Length unspecified [text/html]
+        Saving to file
+        2016-10-31 22:43:24 (17.3 MB/s) - file saved [11697]
+
     reboot: No. I will not
     apt-get: Debian sucks.
     apt: Debian sucks.
@@ -31,6 +51,31 @@ simple_commands:
     brew: Macs really suck.
     pizza: Tastes good.
     free: "              total        used        free      shared  buff/cache   available\nMem:       16332688     4012628     4574188     1173860     7745872    10597228\nSwap:      16674300           0    16674300"
+    ps: |
+        USER       PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+        root         1  0.0  0.0 185696  6428 ?        Ss   Oct30   0:06 /sbin/init splash
+        root         2  0.0  0.0      0     0 ?        S    Oct30   0:00 [kthreadd]
+        root         3  0.0  0.0      0     0 ?        S    Oct30   0:00 [ksoftirqd/0]
+        root         5  0.0  0.0      0     0 ?        S<   Oct30   0:00 [kworker/0:0H]
+        root         7  0.0  0.0      0     0 ?        S    Oct30   0:17 [rcu_sched]
+        root         8  0.0  0.0      0     0 ?        S    Oct30   0:00 [rcu_bh]
+        root         9  0.0  0.0      0     0 ?        S    Oct30   0:00 [migration/0]
+        root        10  0.0  0.0      0     0 ?        S    Oct30   0:00 [watchdog/0]
+        root        11  0.0  0.0      0     0 ?        S    Oct30   0:00 [watchdog/1]
+        root        12  0.0  0.0      0     0 ?        S    Oct30   0:00 [migration/1]
+        root        13  0.0  0.0      0     0 ?        S    Oct30   0:00 [ksoftirqd/1]
+        root        15  0.0  0.0      0     0 ?        S<   Oct30   0:00 [kworker/1:0H]
+        root        16  0.0  0.0      0     0 ?        S    Oct30   0:00 [watchdog/2]
+        root        17  0.0  0.0      0     0 ?        S    Oct30   0:00 [migration/2]
+        root        18  0.0  0.0      0     0 ?        S    Oct30   0:00 [ksoftirqd/2]
+        root        20  0.0  0.0      0     0 ?        S<   Oct30   0:00 [kworker/2:0H]
+        root        21  0.0  0.0      0     0 ?        S    Oct30   0:00 [watchdog/3]
+        root        22  0.0  0.0      0     0 ?        S    Oct30   0:00 [migration/3]
+        root        23  0.0  0.0      0     0 ?        S    Oct30   0:00 [ksoftirqd/3]
+        root        25  0.0  0.0      0     0 ?        S<   Oct30   0:00 [kworker/3:0H]
+        root        26  0.0  0.0      0     0 ?        S    Oct30   0:00 [kdevtmpfs]
+        root        27  0.0  0.0      0     0 ?        S<   Oct30   0:00 [netns]
+        root        28  0.0  0.0      0     0 ?        S<   Oct30   0:00 [perf]
 
 
 
