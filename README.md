@@ -12,7 +12,7 @@ Like all my practice projects I setup goals that I try to reach.
 * ~~Create a Dockerfile and compose~~
 * ~~logs all actions of user~~
 * should allow the following commands
-    * cat
+    *  ~~cat~~
     * ~~wget~~
     * ~~ps~~
     * ~~whoami~~
