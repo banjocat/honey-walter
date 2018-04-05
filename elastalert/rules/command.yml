@@ -13,4 +13,4 @@ blacklist:
   - command
 alert:
   - slack
-slack_webhook_url: https://hooks.slack.com/services/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
+slack_webhook_url: LOL
