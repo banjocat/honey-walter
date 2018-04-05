@@ -1,0 +1,7 @@
+rules_folder: /etc/elastalert/rules
+use_ssl: false
+buffer_time:
+  minutes: 1
+run_every:
+  minutes: 1
+writeback_index: elastalert

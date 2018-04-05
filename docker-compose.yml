@@ -34,4 +34,12 @@ services:
       - elastic
   freegeoip:
     image: fiorix/freegeoip
+  elastalert:
+    build: ./elastalert
+    environment:
+      ES_HOST: elastic
+      ES_PORT: 9200
+    volumes:
+      - ./elastalert:/etc/elastalert
+
 
