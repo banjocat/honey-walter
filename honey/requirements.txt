@@ -1,0 +1,8 @@
+twisted
+PyYaml
+voluptuous
+elasticsearch>=6.0.0
+requests
+cryptography
+pyasn1
+CMRESHandler

@@ -1,24 +1,14 @@
 from python:2
 
+RUN pip install --upgrade pip
 
-# Pips
-RUN pip install pycrypto
-RUN pip install cryptography
-RUN pip install twisted
-RUN pip install PyYaml
-RUN pip install voluptuous
-RUN pip install python-logstash
-RUN pip install requests
-
-
-
-
+COPY ./honey/requirements.txt /tmp/requirements.txt
+RUN pip install -r /tmp/requirements.txt
 
 # Directory format
 RUN mkdir -p /app
 WORKDIR /app
 COPY ./honey/ /app
 
-EXPOSE 2000
 CMD python server.py
 

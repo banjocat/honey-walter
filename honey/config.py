@@ -1,7 +1,7 @@
-import yaml
 import sys
 import logging
 
+import yaml
 from voluptuous import Schema, MultipleInvalid, Invalid
 from voluptuous import Required, All, Range, Length
 
@@ -18,7 +18,7 @@ _schema = Schema({
 
 def _get_config():
     with open('./config/config.yml') as config_file:
-        text = config_file.read()
+       text = config_file.read()
 
     config = yaml.load(text)
     try:
