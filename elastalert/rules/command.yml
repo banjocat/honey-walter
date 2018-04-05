@@ -3,6 +3,12 @@ index: honey-pot-*
 timestamp_field: timestamp
 type: blacklist
 compare_key: action
+include:
+  - _id
+  - output
+  - host_ip
+  - city
+  - country
 blacklist:
   - command
 alert:
